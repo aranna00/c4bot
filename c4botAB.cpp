@@ -29,9 +29,9 @@ int eval(const State &board, const Player &player) {
 
     // add winner scores
     if (getWinner(board) == player) {
-        score += 1000;
+        score += 1000000;
     } else if (getWinner(board) == otherPlayer(player)) {
-        score -= 1000;
+        score -= 1000000;
     }
 
     // check 2 horizontal
@@ -51,9 +51,9 @@ int eval(const State &board, const Player &player) {
                 }
 
                 if (board[y][x] == player) {
-                    score += 10 * multi;
+                    score += 100 * multi;
                 } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 10 * multi;
+                    score -= 100 * multi;
                 }
             }
         }
@@ -74,9 +74,9 @@ int eval(const State &board, const Player &player) {
                 }
 
                 if (board[y][x] == player) {
-                    score += 100 * multi;
+                    score += 10000 * multi;
                 } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 100 * multi;
+                    score -= 10000 * multi;
                 }
             }
         }
@@ -94,9 +94,9 @@ int eval(const State &board, const Player &player) {
                 }
 
                 if (board[y][x] == player) {
-                    score += 10 * multi;
+                    score += 100 * multi;
                 } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 10 * multi;
+                    score -= 100 * multi;
                 }
             }
         }
@@ -114,9 +114,9 @@ int eval(const State &board, const Player &player) {
                 }
 
                 if (board[y][x] == player) {
-                    score += 100 * multi;
+                    score += 10000 * multi;
                 } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 100 * multi;
+                    score -= 10000 * multi;
                 }
             }
         }
@@ -139,9 +139,9 @@ int eval(const State &board, const Player &player) {
                     multi = 1;
                 }
                 if (board[y][x] == player) {
-                    score += 10 * multi;
+                    score += 100 * multi;
                 } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 10 * multi;
+                    score -= 100 * multi;
                 }
             }
         }
@@ -159,9 +159,9 @@ int eval(const State &board, const Player &player) {
                     multi = 1;
                 }
                 if (board[y][x] == player) {
-                    score += 100 * multi;
+                    score += 10000 * multi;
                 } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 100 * multi;
+                    score -= 10000 * multi;
                 }
             }
         }
@@ -184,9 +184,9 @@ int eval(const State &board, const Player &player) {
                     multi = 1;
                 }
                 if (board[y][x] == player) {
-                    score += 10 * multi;
+                    score += 100 * multi;
                 } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 10 * multi;
+                    score -= 100 * multi;
                 }
             }
         }
@@ -205,9 +205,9 @@ int eval(const State &board, const Player &player) {
                 }
 
                 if (board[y][x] == player) {
-                    score += 100 * multi;
+                    score += 10000 * multi;
                 } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 100 * multi;
+                    score -= 10000 * multi;
                 }
             }
         }
@@ -251,6 +251,8 @@ int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
         if (ply != maxPly)
             return bestAB.score;
 
+        std::cerr << bestAB.score << std::endl;
+
         return bestAB.move;
     } else {
         bestAB.score = max;
@@ -267,7 +269,6 @@ int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
         }
 
         if (ply < maxPly) {
-            std::cerr << bestAB.score << std::endl;
             return bestAB.score;
         }
 

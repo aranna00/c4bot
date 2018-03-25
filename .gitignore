@@ -82,7 +82,7 @@ fabric.properties
 *.lib
 
 # Executables
-*.exe
+c4bot.exe
 *.out
 *.app
 .idea/.name
