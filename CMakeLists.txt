@@ -10,6 +10,9 @@ add_executable(c4bot_1_
         c4BotMc.cpp
         c4BotMc.h
 
+        c4botAB.cpp
+        c4botAB.h
+
         c4bot.cpp
         c4bot.h
         main.cpp

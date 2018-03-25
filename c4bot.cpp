@@ -34,7 +34,8 @@ void C4Bot::move(int timeout) {
 //	std::vector<Move> moves = getMoves(state);
 //	std::cout << "place_disc " << *select_randomly(moves.begin(), moves.end()) << std::endl;
 
-    std::cout << "place_disc " << mcMove(state, player,totalTime/20) << std::endl;
+//    std::cout << "place_disc " << mcMove(state, player,totalTime/20) << std::endl;
+    std::cout << "place_disc " << alphaBeta(state,5) << std::endl;
 }
 
 void C4Bot::update(std::string &key, std::string &value) {

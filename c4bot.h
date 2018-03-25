@@ -8,6 +8,7 @@
 #include <vector>
 #include "c4.h"
 #include "c4BotMc.h"
+#include "c4botAB.h"
 
 class C4Bot {
 	int timebank;
@@ -28,12 +29,6 @@ class C4Bot {
 
 public:
 	void run();
-};
-
-
-struct AB{
-	Move move;
-	int score;
 };
 
 #endif // C4BOT_H
