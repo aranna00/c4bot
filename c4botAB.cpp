@@ -4,7 +4,7 @@
 
 #include "c4botAB.h"
 
-int maxPly = 5;
+int maxPly = 7;
 
 Player otherPlayer(Player player) {
     if (player == Player::O) {
@@ -34,56 +34,193 @@ int eval(const State &board, const Player &player) {
         score -= 1000;
     }
 
-    // check horizontal
-    for (int yH = 0; yH < 5; ++yH) {
-        for (int xH = 0; xH < 6; ++xH) {
-            if (board[yH][xH] == board[yH][xH+1]) {
-                int mult = 1;
-                if(xH+2<5) {
-                    if (board[yH][xH] == board[yH][xH + 2]) {
-                        mult = 10;
-                    }
+    // check 2 horizontal
+    for (int y = 0; y < 6; ++y) {
+        for (int x = 1; x < 7; ++x) {
+            if (board[y][x] == board[y][x - 1]) {
+                int multi = 0;
+                // check if its possible to win from these stones
+                if (x + 2 < 7 && board[y][x + 1] == Player::None && board[y][x + 2] == Player::None) {
+                    multi = 1;
                 }
-                if (board[yH][xH] == player) {
-                    score += 10*mult;
-                } else if (board[yH][xH] == otherPlayer(player)) {
-                    score -= 10*mult;
+                if (x - 2 > 0 && x + 2 < 7 && board[y][x - 2] == Player::None && board[y][x + 1] == Player::None) {
+                    multi = 1;
+                }
+                if (x - 3 > 0 && board[y][x - 3] == Player::None && board[y][x - 2] == Player::None) {
+                    multi = 1;
+                }
+
+                if (board[y][x] == player) {
+                    score += 10 * multi;
+                } else if (board[y][x] == otherPlayer(player)) {
+                    score -= 10 * multi;
                 }
             }
         }
     }
 
-    // check vertical
-    for (int xV = 0; xV < 5; ++xV) {
-        for (int yV = 0; yV < 6; ++yV) {
-            if (board[xV][yV] == board[xV][yV+1]) {
-                int mult = 1;
-                if(yV+2<6) {
-                    if (board[xV][yV] == board[xV][yV + 2]) {
-                        mult = 10;
+    // check 3 horizontal
+    for (int y = 0; y < 6; ++y) {
+        for (int x = 0; x < 5; ++x) {
+            if (board[y][x] == board[y][x + 1] && board[y][x] == board[y][x + 2]) {
+                int multi = 0;
+
+                // check if its possible to win from these stones
+                if (x - 1 > 0 && board[y][x - 1] == Player::None) {
+                    multi = 1;
+                }
+                if (x + 3 < 5 && board[y][x + 3] == Player::None) {
+                    multi = 1;
+                }
+
+                if (board[y][x] == player) {
+                    score += 100 * multi;
+                } else if (board[y][x] == otherPlayer(player)) {
+                    score -= 100 * multi;
+                }
+            }
+        }
+    }
+
+    // check 2 vertical
+    for (int y = 5; y > 0; --y) {
+        for (int x = 0; x < 7; ++x) {
+            if (board[y][x] == board[y - 1][x]) {
+                int multi = 0;
+                if (y - 2 > 0) {
+                    if (board[y - 2][x] == Player::None) {
+                        multi = 1;
                     }
                 }
-                if (board[xV][yV] == player) {
-                    score += 10*mult;
-                } else if (board[xV][yV] == otherPlayer(player)) {
-                    score -= 10*mult;
+
+                if (board[y][x] == player) {
+                    score += 10 * multi;
+                } else if (board[y][x] == otherPlayer(player)) {
+                    score -= 10 * multi;
                 }
             }
         }
     }
-    // check diagonals top-left to bottom-right
-    for (int y = 0; y < 4; ++y) {
-        for (int x = 0; x < 5; ++x) {
-            if(board[y][x] == board[y+1][x+1]){
-                
+
+    // check 3 vertical
+    for (int y = 5; y < 1; --y) {
+        for (int x = 0; x < 7; ++x) {
+            if (board[y][x] == board[y - 1][x] && board[y][x] == board[y - 2][x]) {
+                int multi = 0;
+                if (y - 3 > 0) {
+                    if (board[y - 3][x] == Player::None) {
+                        multi = 1;
+                    }
+                }
+
+                if (board[y][x] == player) {
+                    score += 100 * multi;
+                } else if (board[y][x] == otherPlayer(player)) {
+                    score -= 100 * multi;
+                }
             }
         }
     }
+
+    // check 2 top left to bottom right
+    for (int y = 0; y < 3; ++y) {
+        for (int x = 0; x < 4; ++x) {
+            if (board[y][x] == board[y + 1][x + 1]) {
+                int multi = 0;
+                if (y - 2 > 0 && x - 2 > 0 && board[y - 2][x - 2] == Player::None &&
+                    board[y - 1][x - 1] == Player::None) {
+                    multi = 1;
+                }
+                if (y - 1 > 0 && x - 1 > 0 && board[y - 1][x - 1] == Player::None &&
+                    board[y + 2][x + 2] == Player::None) {
+                    multi = 1;
+                }
+                if (board[y + 2][x + 2] == Player::None && board[y + 3][x + 3] == Player::None) {
+                    multi = 1;
+                }
+                if (board[y][x] == player) {
+                    score += 10 * multi;
+                } else if (board[y][x] == otherPlayer(player)) {
+                    score -= 10 * multi;
+                }
+            }
+        }
+    }
+
+    // check 3 top left to bottom right
+    for (int y = 0; y < 3; ++y) {
+        for (int x = 0; x < 4; ++x) {
+            if (board[y][x] == board[y + 1][x + 1] && board[y][x] == board[y + 2][x + 2]) {
+                int multi = 0;
+                if (y - 1 > 0 && x - 1 > 0 && board[y - 1][x - 1] == Player::None) {
+                    multi = 1;
+                }
+                if (board[y + 3][x + 3] == Player::None) {
+                    multi = 1;
+                }
+                if (board[y][x] == player) {
+                    score += 100 * multi;
+                } else if (board[y][x] == otherPlayer(player)) {
+                    score -= 100 * multi;
+                }
+            }
+        }
+    }
+
+    // check 2 bottom left to top right
+    for (int y = 5; y > 3; --y) {
+        for (int x = 0; x < 4; ++x) {
+            if (board[y][x] == board[y - 1][x + 1]) {
+                int multi = 0;
+                if (y + 2 > 3 && x - 2 > 0 && board[y + 2][x - 2] == Player::None &&
+                    board[y + 1][x - 1] == Player::None) {
+                    multi = 1;
+                }
+                if (y + 1 > 3 && x - 1 > 0 && board[y + 1][x - 1] == Player::None &&
+                    board[y - 2][x + 2] == Player::None) {
+                    multi = 1;
+                }
+                if (board[y - 2][x + 2] == Player::None && board[y - 3][x + 3] == Player::None) {
+                    multi = 1;
+                }
+                if (board[y][x] == player) {
+                    score += 10 * multi;
+                } else if (board[y][x] == otherPlayer(player)) {
+                    score -= 10 * multi;
+                }
+            }
+        }
+    }
+
+    // check 3 bottom left to top right
+    for (int y = 5; y > 3; --y) {
+        for (int x = 0; x < 4; ++x) {
+            if (board[y][x] == board[y - 1][x + 1] && board[y][x] == board[y - 2][x + 2]) {
+                int multi = 0;
+                if (y + 1 > 3 && x - 1 > 0 && board[y + 1][x - 1] == Player::None) {
+                    multi = 1;
+                }
+                if (board[y - 3][x + 3] == Player::None) {
+                    multi = 1;
+                }
+
+                if (board[y][x] == player) {
+                    score += 100 * multi;
+                } else if (board[y][x] == otherPlayer(player)) {
+                    score -= 100 * multi;
+                }
+            }
+        }
+    }
+
 
     return score;
 }
 
 int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
+    if (board[5][3] == Player::None) {
+        return 3;
+    }
     AB bestAB;
     if (maxPlayer == Player::None) {
         maxPly = ply;
@@ -129,8 +266,12 @@ int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
             };
         }
 
-        if (ply != maxPly)
+        if (ply < maxPly) {
+            std::cerr << bestAB.score << std::endl;
             return bestAB.score;
+        }
+
+        std::cerr << bestAB.score << std::endl;
 
         return bestAB.move;
     }
