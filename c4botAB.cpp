@@ -14,210 +14,196 @@ Player otherPlayer(Player player) {
     }
 }
 
-int eval(const State &board, const Player &player) {
+int eval(const State &board, const Player &maxPlayer) {
     int score = 0;
+    if (getWinner(board) == maxPlayer) {
+        score = 1000000;
+    } else if (getWinner(board) == otherPlayer(maxPlayer)) {
+        score = -1000000;
+    }
+
+
     // add individual scores
     for (int y = 0; y < 6; ++y) {
         for (int x = 0; x < 7; ++x) {
-            if (board[y][x] == player) {
+            if (board[y][x] == maxPlayer) {
                 score++;
-            } else if (board[y][x] == otherPlayer(player)) {
+            } else if (board[y][x] == otherPlayer(maxPlayer)) {
                 score--;
             }
-        }
-    }
-
-    // add winner scores
-    if (getWinner(board) == player) {
-        score += 1000000;
-    } else if (getWinner(board) == otherPlayer(player)) {
-        score -= 1000000;
-    }
-
-    // check 2 horizontal
-    for (int y = 0; y < 6; ++y) {
-        for (int x = 1; x < 7; ++x) {
-            if (board[y][x] == board[y][x - 1]) {
-                int multi = 0;
-                // check if its possible to win from these stones
-                if (x + 2 < 7 && board[y][x + 1] == Player::None && board[y][x + 2] == Player::None) {
-                    multi = 1;
-                }
-                if (x - 2 > 0 && x + 2 < 7 && board[y][x - 2] == Player::None && board[y][x + 1] == Player::None) {
-                    multi = 1;
-                }
-                if (x - 3 > 0 && board[y][x - 3] == Player::None && board[y][x - 2] == Player::None) {
-                    multi = 1;
-                }
-
-                if (board[y][x] == player) {
-                    score += 100 * multi;
-                } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 100 * multi;
-                }
+            if (board[y][x] != Player::None) {
+                continue;
             }
-        }
-    }
+            if (y < 6 && x < 7) {
+                if (board[y][x] == board[y][x - 1]) {
+                    if (board[y][x] == board[y][x + 2]) {
+                        int multi = 0;
 
-    // check 3 horizontal
-    for (int y = 0; y < 6; ++y) {
-        for (int x = 0; x < 5; ++x) {
-            if (board[y][x] == board[y][x + 1] && board[y][x] == board[y][x + 2]) {
-                int multi = 0;
+                        // check if its possible to win from these stones
+                        if (x - 1 > 0 && board[y][x - 1] == Player::None) {
+                            multi = 1;
+                        }
+                        if (x + 3 < 5 && board[y][x + 3] == Player::None) {
+                            multi = 1;
+                        }
 
-                // check if its possible to win from these stones
-                if (x - 1 > 0 && board[y][x - 1] == Player::None) {
-                    multi = 1;
-                }
-                if (x + 3 < 5 && board[y][x + 3] == Player::None) {
-                    multi = 1;
-                }
-
-                if (board[y][x] == player) {
-                    score += 10000 * multi;
-                } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 10000 * multi;
-                }
-            }
-        }
-    }
-
-    // check 2 vertical
-    for (int y = 5; y > 0; --y) {
-        for (int x = 0; x < 7; ++x) {
-            if (board[y][x] == board[y - 1][x]) {
-                int multi = 0;
-                if (y - 2 > 0) {
-                    if (board[y - 2][x] == Player::None) {
+                        if (board[y][x] == maxPlayer) {
+                            score += 10000 * multi;
+                        } else if (board[y][x] == otherPlayer(maxPlayer)) {
+                            score -= 10000 * multi;
+                        }
+                        goto checkVertical;
+                    }
+                    int multi = 0;
+                    // check if its possible to win from these stones
+                    if (x + 2 < 7 && board[y][x + 1] == Player::None && board[y][x + 2] == Player::None) {
                         multi = 1;
                     }
-                }
-
-                if (board[y][x] == player) {
-                    score += 100 * multi;
-                } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 100 * multi;
-                }
-            }
-        }
-    }
-
-    // check 3 vertical
-    for (int y = 5; y < 1; --y) {
-        for (int x = 0; x < 7; ++x) {
-            if (board[y][x] == board[y - 1][x] && board[y][x] == board[y - 2][x]) {
-                int multi = 0;
-                if (y - 3 > 0) {
-                    if (board[y - 3][x] == Player::None) {
+                    if (x - 2 > 0 && x + 2 < 7 && board[y][x - 2] == Player::None && board[y][x + 1] == Player::None) {
                         multi = 1;
                     }
-                }
+                    if (x - 3 > 0 && board[y][x - 3] == Player::None && board[y][x - 2] == Player::None) {
+                        multi = 1;
+                    }
 
-                if (board[y][x] == player) {
-                    score += 10000 * multi;
-                } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 10000 * multi;
+                    if (board[y][x] == maxPlayer) {
+                        score += 100 * multi;
+                    } else if (board[y][x] == otherPlayer(maxPlayer)) {
+                        score -= 100 * multi;
+                    }
+                }
+            }
+
+            checkVertical:
+            {
+                if (y > 0 && x < 7) {
+                    if (board[y][x] == board[y - 1][x]) {
+                        if (board[y][x] == board[y - 2][x]) {
+                            int multi = 0;
+                            if (y - 3 > 0) {
+                                if (board[y - 3][x] == Player::None) {
+                                    multi = 1;
+                                }
+                            }
+
+                            if (board[y][x] == maxPlayer) {
+                                score += 10000 * multi;
+                            } else if (board[y][x] == otherPlayer(maxPlayer)) {
+                                score -= 10000 * multi;
+                            }
+                            goto checkTLtBR;
+                        }
+                        int multi = 0;
+                        if (y - 2 > 0) {
+                            if (board[y - 2][x] == Player::None) {
+                                multi = 1;
+                            }
+                        }
+
+                        if (board[y][x] == maxPlayer) {
+                            score += 100 * multi;
+                        } else if (board[y][x] == otherPlayer(maxPlayer)) {
+                            score -= 100 * multi;
+                        }
+                    }
+                }
+            }
+            // check top left to bottom right
+            checkTLtBR:
+            {
+                if (y < 3 && x < 4) {
+                    if (board[y][x] == board[y + 1][x + 1]) {
+                        if (board[y][x] == board[y + 2][x + 2]) {
+                            int multi = 0;
+                            if (y - 1 > 0 && x - 1 > 0 && board[y - 1][x - 1] == Player::None) {
+                                multi = 1;
+                            }
+                            if (board[y + 3][x + 3] == Player::None) {
+                                multi = 1;
+                            }
+                            if (board[y][x] == maxPlayer) {
+                                score += 10000 * multi;
+                            } else if (board[y][x] == otherPlayer(maxPlayer)) {
+                                score -= 10000 * multi;
+                            }
+                            goto checkBLtTR;
+                        }
+                        int multi = 0;
+                        if (y - 2 > 0 && x - 2 > 0 && board[y - 2][x - 2] == Player::None &&
+                            board[y - 1][x - 1] == Player::None) {
+                            multi = 1;
+                        }
+                        if (y - 1 > 0 && x - 1 > 0 && board[y - 1][x - 1] == Player::None &&
+                            board[y + 2][x + 2] == Player::None) {
+                            multi = 1;
+                        }
+                        if (board[y + 2][x + 2] == Player::None && board[y + 3][x + 3] == Player::None) {
+                            multi = 1;
+                        }
+                        if (board[y][x] == maxPlayer) {
+                            score += 100 * multi;
+                        } else if (board[y][x] == otherPlayer(maxPlayer)) {
+                            score -= 100 * multi;
+                        }
+                    }
+                }
+            }
+            // check bottom left to top right
+            checkBLtTR:
+            {
+                if (y > 3 && x < 4) {
+                    if (board[y][x] == board[y - 1][x + 1]) {
+                        if (board[y][x] == board[y - 2][x + 2]) {
+                            int multi = 0;
+                            if (y + 1 > 3 && x - 1 > 0 && board[y + 1][x - 1] == Player::None) {
+                                multi = 1;
+                            }
+                            if (board[y - 3][x + 3] == Player::None) {
+                                multi = 1;
+                            }
+
+                            if (board[y][x] == maxPlayer) {
+                                score += 10000 * multi;
+                            } else if (board[y][x] == otherPlayer(maxPlayer)) {
+                                score -= 10000 * multi;
+                            }
+                            continue;
+                        }
+                        int multi = 0;
+                        if (y + 2 > 3 && x - 2 > 0 && board[y + 2][x - 2] == Player::None &&
+                            board[y + 1][x - 1] == Player::None) {
+                            multi = 1;
+                        }
+                        if (y + 1 > 3 && x - 1 > 0 && board[y + 1][x - 1] == Player::None &&
+                            board[y - 2][x + 2] == Player::None) {
+                            multi = 1;
+                        }
+                        if (board[y - 2][x + 2] == Player::None && board[y - 3][x + 3] == Player::None) {
+                            multi = 1;
+                        }
+                        if (board[y][x] == maxPlayer) {
+                            score += 100 * multi;
+                        } else if (board[y][x] == otherPlayer(maxPlayer)) {
+                            score -= 100 * multi;
+                        }
+                    }
                 }
             }
         }
     }
-
-    // check 2 top left to bottom right
-    for (int y = 0; y < 3; ++y) {
-        for (int x = 0; x < 4; ++x) {
-            if (board[y][x] == board[y + 1][x + 1]) {
-                int multi = 0;
-                if (y - 2 > 0 && x - 2 > 0 && board[y - 2][x - 2] == Player::None &&
-                    board[y - 1][x - 1] == Player::None) {
-                    multi = 1;
-                }
-                if (y - 1 > 0 && x - 1 > 0 && board[y - 1][x - 1] == Player::None &&
-                    board[y + 2][x + 2] == Player::None) {
-                    multi = 1;
-                }
-                if (board[y + 2][x + 2] == Player::None && board[y + 3][x + 3] == Player::None) {
-                    multi = 1;
-                }
-                if (board[y][x] == player) {
-                    score += 100 * multi;
-                } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 100 * multi;
-                }
-            }
-        }
-    }
-
-    // check 3 top left to bottom right
-    for (int y = 0; y < 3; ++y) {
-        for (int x = 0; x < 4; ++x) {
-            if (board[y][x] == board[y + 1][x + 1] && board[y][x] == board[y + 2][x + 2]) {
-                int multi = 0;
-                if (y - 1 > 0 && x - 1 > 0 && board[y - 1][x - 1] == Player::None) {
-                    multi = 1;
-                }
-                if (board[y + 3][x + 3] == Player::None) {
-                    multi = 1;
-                }
-                if (board[y][x] == player) {
-                    score += 10000 * multi;
-                } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 10000 * multi;
-                }
-            }
-        }
-    }
-
-    // check 2 bottom left to top right
-    for (int y = 5; y > 3; --y) {
-        for (int x = 0; x < 4; ++x) {
-            if (board[y][x] == board[y - 1][x + 1]) {
-                int multi = 0;
-                if (y + 2 > 3 && x - 2 > 0 && board[y + 2][x - 2] == Player::None &&
-                    board[y + 1][x - 1] == Player::None) {
-                    multi = 1;
-                }
-                if (y + 1 > 3 && x - 1 > 0 && board[y + 1][x - 1] == Player::None &&
-                    board[y - 2][x + 2] == Player::None) {
-                    multi = 1;
-                }
-                if (board[y - 2][x + 2] == Player::None && board[y - 3][x + 3] == Player::None) {
-                    multi = 1;
-                }
-                if (board[y][x] == player) {
-                    score += 100 * multi;
-                } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 100 * multi;
-                }
-            }
-        }
-    }
-
-    // check 3 bottom left to top right
-    for (int y = 5; y > 3; --y) {
-        for (int x = 0; x < 4; ++x) {
-            if (board[y][x] == board[y - 1][x + 1] && board[y][x] == board[y - 2][x + 2]) {
-                int multi = 0;
-                if (y + 1 > 3 && x - 1 > 0 && board[y + 1][x - 1] == Player::None) {
-                    multi = 1;
-                }
-                if (board[y - 3][x + 3] == Player::None) {
-                    multi = 1;
-                }
-
-                if (board[y][x] == player) {
-                    score += 10000 * multi;
-                } else if (board[y][x] == otherPlayer(player)) {
-                    score -= 10000 * multi;
-                }
-            }
-        }
-    }
-
 
     return score;
 }
 
+static double diffclock(clock_t clock1, clock_t clock2) {
+    double diffticks = clock1 - clock2;
+    double diffms = (diffticks) / (CLOCKS_PER_SEC / 1000);
+    return abs(diffms);
+}
+
 int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
+
+    clock_t clock1 = clock();
     if (board[5][3] == Player::None) {
         return 3;
     }
@@ -251,7 +237,7 @@ int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
         if (ply != maxPly)
             return bestAB.score;
 
-        std::cerr << bestAB.score << std::endl;
+        std::cerr << clock() - clock1 << std::endl;
 
         return bestAB.move;
     } else {
@@ -271,8 +257,6 @@ int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
         if (ply < maxPly) {
             return bestAB.score;
         }
-
-        std::cerr << bestAB.score << std::endl;
 
         return bestAB.move;
     }

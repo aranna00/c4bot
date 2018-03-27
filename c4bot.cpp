@@ -22,8 +22,7 @@ void C4Bot::run() {
 }
 
 void C4Bot::move(int timeout) {
-    int totalTime = timeout+(time_per_move/2)*round;
-//    std::cerr << totalTime << std::endl;
+    std::cerr << timeout << std::endl;
     Player player;
     if (your_botid == 0) {
         player = Player::X;
@@ -35,7 +34,14 @@ void C4Bot::move(int timeout) {
 //	std::cout << "place_disc " << *select_randomly(moves.begin(), moves.end()) << std::endl;
 
 //    std::cout << "place_disc " << mcMove(state, player,totalTime/20) << std::endl;
-    std::cout << "place_disc " << alphaBeta(state, 7) << std::endl;
+    if(round>15) {
+        std::cout << "place_disc " << alphaBeta(state, 9) << std::endl;
+    }
+    else if(round>10) {
+        std::cout << "place_disc " << alphaBeta(state, 8) << std::endl;
+    } else{
+        std::cout << "place_disc " << alphaBeta(state, 7) << std::endl;
+    }
 }
 
 void C4Bot::update(std::string &key, std::string &value) {

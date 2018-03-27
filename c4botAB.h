@@ -13,7 +13,7 @@ struct AB{
     int score;
 };
 Player otherPlayer(Player player);
-int eval(const State &board, const Player &player);
+int eval(const State &board, const Player &maxPlayer);
 int alphaBeta(const State &board, int ply, Player maxPlayer = Player::None, int min = INT32_MIN, int max = INT32_MAX);
 
 #endif //C4BOT_1_C4BOTAB_H
