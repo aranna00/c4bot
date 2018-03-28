@@ -205,20 +205,22 @@ int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
 
     clock_t clock1 = clock();
     if (board[5][3] == Player::None) {
+        std::cerr << clock() - clock1 << std::endl;
         return 3;
     }
-    AB bestAB;
+
+    if (getWinner(board) == Player::None || ply == 0) {
+        int score = eval(board, maxPlayer);
+        return score;
+    }
+
     if (maxPlayer == Player::None) {
         maxPly = ply;
         maxPlayer = getCurrentPlayer(board);
     }
 
+    AB bestAB;
     std::vector<Move> moves = getMoves(board);
-
-    if (moves.empty() || ply == 0) {
-        int score = eval(board, maxPlayer);
-        return score;
-    }
 
     if (maxPlayer == getCurrentPlayer(board)) {
         bestAB.score = min;
@@ -260,4 +262,8 @@ int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
 
         return bestAB.move;
     }
+}
+
+int negaMax(const State &board, int ply, Player maxPlayer, int min, int max) {
+
 }
