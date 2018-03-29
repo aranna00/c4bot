@@ -2,6 +2,7 @@
 // Aswin van Woudenberg
 
 #include "c4bot.h"
+#include "Network.h"
 #include <sstream>
 
 
@@ -35,7 +36,9 @@ void C4Bot::move(int timeout) {
 
 //    std::cout << "place_disc " << mcMove(state, player,totalTime/20) << std::endl;
 //    std::cout << "place_disc " << alphaBeta(state, 7) << std::endl;
-    std::cout << "place_disc " << negaMax(state, 7) << std::endl;
+//    std::cout << "place_disc " << negaMax(state, 7) << std::endl;
+    Network network;
+    network.generateNetworkFromFile("D:\\ClionProjects\\c4bot(1)\\Networks\\Generation-0\\0-0.csv");
 }
 
 void C4Bot::update(std::string &key, std::string &value) {

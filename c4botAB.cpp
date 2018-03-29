@@ -231,26 +231,27 @@ int alphaBeta(const State &board, int ply, Player maxPlayer, int min, int max) {
     }
 }
 
-int negaMax(const State &board, int ply, Player maxPlayer, int min, int max) {
-    if (board[5][3] == Player::None) {
+int negaMax(const State &board, int ply, Player player, int min, int max) {
+    if (board[5][3] == Player::None || board[4][3] == Player::None) {
         return 3;
     }
 
-    if (maxPlayer == Player::None) {
+    if (player == Player::None) {
         maxPly = ply;
-        maxPlayer = getCurrentPlayer(board);
+        player = getCurrentPlayer(board);
     }
 
     std::vector<Move> moves = getMoves(board);
 
     if (moves.empty() || ply == 0 || getWinner(board) != Player::None) {
-        int score = eval(board, getCurrentPlayer(board));
+        int score = eval(board, player);
         return score;
     }
 
     AB bestAB;
+    bestAB.score = min;
     for (Move move : moves) {
-        int localScore = -negaMax(doMove(board, move), ply - 1, maxPlayer, -max, -min);
+        int localScore = -negaMax(doMove(board, move), ply - 1, otherPlayer(player), -max, -min);
         if (bestAB.score < localScore) {
             bestAB.score = localScore;
             bestAB.move = move;

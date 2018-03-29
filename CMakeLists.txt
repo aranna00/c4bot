@@ -17,4 +17,4 @@ add_executable(c4bot_1_
         c4bot.h
         main.cpp
         Makefile
-        )
+        Synapse.cpp Synapse.h Neuron.cpp Neuron.h Network.cpp Network.h)
