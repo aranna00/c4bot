@@ -22,15 +22,10 @@ void Network::generateFileFromNetwork() {
 }
 
 void Network::generateNetworkFromFile(std::string filePath) {
-    inputs.emplace_back();
-    inputs.emplace_back();
-    inputs.emplace_back();
-    inputs.emplace_back();
-
-    outputs.emplace_back();
-    outputs.emplace_back();
-    outputs.emplace_back();
-    outputs.emplace_back();
+    for (int k = 0; k < 4; ++k) {
+        inputs.emplace_back();
+        outputs.emplace_back();
+    }
 
     std::ifstream inFile(filePath);
     std::string neuronCounterString;
@@ -43,10 +38,9 @@ void Network::generateNetworkFromFile(std::string filePath) {
 
 
     for (int i = 0; i < layerCounter; ++i) {
-        std::vector<Neuron> layer;
+        std::vector<Neuron *> layer;
         for (int j = 0; j < neuronCounter; ++j) {
-            Neuron neuron;
-            layer.push_back(neuron);
+            layer.emplace_back();
         }
         layers.emplace_back(layer);
     }
@@ -66,7 +60,7 @@ void Network::generateNetworkFromFile(std::string filePath) {
             int currentEndNeuron = 0;
             // loop through synapseWeights to get weight and endNeuron
             while (ssWeights >> weight) {
-                Synapse synapse;
+                Synapse synapse{};
                 synapse.weight = weight;
                 if (currentLayer == 0) {
                     synapse.start = inputs[currentStartNeuron];
