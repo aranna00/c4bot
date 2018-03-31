@@ -13,7 +13,7 @@ struct Neuron;
 struct Synapse {
     Neuron *start;
     Neuron *end;
-    int weight;
+    double weight;
 };
 
 

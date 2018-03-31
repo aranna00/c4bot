@@ -29,6 +29,14 @@ class C4Bot {
 
 public:
 	void run();
+
+    static Player otherPlayer(Player player) {
+        if (player == Player::O) {
+            return Player::X;
+        } else {
+            return Player::O;
+        }
+    }
 };
 
 #endif // C4BOT_H

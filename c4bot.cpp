@@ -5,7 +5,7 @@
 #include "Network.h"
 #include <sstream>
 
-
+std::string fileUsed = "";
 void C4Bot::run() {
     std::string line;
     while (std::getline(std::cin, line)) {
@@ -24,12 +24,11 @@ void C4Bot::run() {
 
 void C4Bot::move(int timeout) {
     std::cerr << timeout << std::endl;
-    Player player;
-    if (your_botid == 0) {
-        player = Player::X;
-    } else {
-        player = Player::O;
+    if (fileUsed.empty()) {
+        fileUsed = Network::MakeRandomNetwork();
     }
+    std::cerr << fileUsed << std::endl;
+
     // Do something more intelligent here instead of returning a random move
 //	std::vector<Move> moves = getMoves(state);
 //	std::cout << "place_disc " << *select_randomly(moves.begin(), moves.end()) << std::endl;
@@ -38,7 +37,15 @@ void C4Bot::move(int timeout) {
 //    std::cout << "place_disc " << alphaBeta(state, 7) << std::endl;
 //    std::cout << "place_disc " << negaMax(state, 7) << std::endl;
     Network network;
-    network.generateNetworkFromFile("Networks\\Generation-0\\0-0.csv");
+#ifdef NDEBUG
+    network.generateNetworkFromFile(fileUsed);
+//    network.generateNetworkFromFile("Networks\\Generation-0\\0-1.annconf");
+#else
+    network.generateNetworkFromFile(fileUsed);
+//    network.generateNetworkFromFile("Networks\\Generation-0\\0-1.annconf");
+#endif
+    network.setInputValues(state);
+    std::cout << "place_disc " << network.getBestValue() << std::endl;
 }
 
 void C4Bot::update(std::string &key, std::string &value) {

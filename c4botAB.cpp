@@ -3,17 +3,10 @@
 //
 
 #include "c4botAB.h"
+#include "c4bot.h"
 
 int maxPly = 7;
 int evalCount = 0;
-
-Player otherPlayer(Player player) {
-    if (player == Player::O) {
-        return Player::X;
-    } else {
-        return Player::O;
-    }
-}
 
 int checkHorizontal(State board, int y, int x) {
     if (board[y][x] == board[y][x + 1]) {
@@ -130,7 +123,7 @@ int eval(const State &board, const Player &maxPlayer) {
     int score = 0;
     if (getWinner(board) == maxPlayer) {
         score = 1000000;
-    } else if (getWinner(board) == otherPlayer(maxPlayer)) {
+    } else if (getWinner(board) == C4Bot::otherPlayer(maxPlayer)) {
         score = -1000000;
     }
 
@@ -145,7 +138,7 @@ int eval(const State &board, const Player &maxPlayer) {
 
             if (board[y][x] == maxPlayer) {
                 multi = 1;
-            } else if (board[y][x] == otherPlayer(maxPlayer)) {
+            } else if (board[y][x] == C4Bot::otherPlayer(maxPlayer)) {
                 multi = -1;
             }
             score += multi;
@@ -251,7 +244,7 @@ int negaMax(const State &board, int ply, Player player, int min, int max) {
     AB bestAB;
     bestAB.score = min;
     for (Move move : moves) {
-        int localScore = -negaMax(doMove(board, move), ply - 1, otherPlayer(player), -max, -min);
+        int localScore = -negaMax(doMove(board, move), ply - 1, C4Bot::otherPlayer(player), -max, -min);
         if (bestAB.score < localScore) {
             bestAB.score = localScore;
             bestAB.move = move;

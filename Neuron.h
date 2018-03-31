@@ -12,9 +12,12 @@
 struct Synapse;
 
 struct Neuron {
-    int value;
-    std::vector<Synapse> *inBound;
-    std::vector<Synapse> *outBound;
+    double value = 0;
+    std::vector<Synapse *> inBound;
+    std::vector<Synapse *> outBound;
+
+public:
+    virtual double getValue();
 };
 
 

@@ -8,18 +8,27 @@
 
 #include <vector>
 #include <string>
+#include <random>
 #include "Neuron.h"
 #include "Synapse.h"
+#include "InputNeuron.h"
+#include "OutputNeuron.h"
+#include "c4.h"
 
 class Network {
-    std::vector<Neuron *> inputs;
-    std::vector<Neuron *> outputs;
+    std::vector<InputNeuron *> inputs;
+    std::vector<OutputNeuron *> outputs;
     std::vector<std::vector<Neuron *>> layers;
 
     void generateFileFromNetwork();
 
 public:
+    static std::string MakeRandomNetwork();
+
+    void setInputValues(State &board);
     void generateNetworkFromFile(std::string filePath);
+
+    int getBestValue();
 };
 
 
