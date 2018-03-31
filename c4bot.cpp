@@ -27,7 +27,6 @@ void C4Bot::move(int timeout) {
     if (fileUsed.empty()) {
         fileUsed = Network::MakeRandomNetwork();
     }
-    std::cerr << fileUsed << std::endl;
 
     // Do something more intelligent here instead of returning a random move
 //	std::vector<Move> moves = getMoves(state);

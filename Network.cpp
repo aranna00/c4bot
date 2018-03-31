@@ -13,6 +13,7 @@
 #include <w32api/libloaderapi.h>
 #include <zconf.h>
 #include <w32api/fileapi.h>
+#include <libgen.h>
 #include "Neuron.h"
 #include "Network.h"
 #include "c4bot.h"
@@ -23,12 +24,19 @@ unsigned int countWordsInString(std::string const &str) {
                                                    std::istream_iterator<std::string>()));
 }
 
-void Network::generateFileFromNetwork() {
+void Network::generateFileFromNetwork(Network network) {
+    std::ofstream OutFile;
+    OutFile.open(network.orgFilename);
+    for (auto &input : network.inputs) {
+        for (int j = 0; j < input->outBound.size(); ++j) {
 
+        }
+    }
 }
 
 void Network::generateNetworkFromFile(std::string filePath) {
-    for (int k = 0; k < 126; ++k) {
+    orgFilename = basename(const_cast<char *>(filePath.c_str()));
+    for (int k = 0; k < 42; ++k) {
         inputs.emplace_back(new InputNeuron);
     }
     for (int k = 0; k < 7; ++k) {
@@ -156,19 +164,18 @@ inline bool FileExists(const std::string &name) {
 }
 
 std::string Network::MakeRandomNetwork() {
-
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_real_distribution<double> dist(0, 1);
 
-    std::string basePath = "Networks\\Generation-0\\";
+    std::string basePath = "Networks\\CurrentGen\\";
     CreateDirectory("Networks", NULL);
-    CreateDirectory("Networks\\Generation-0", NULL);
+    CreateDirectory("Networks\\CurrentGen", NULL);
     int fileNumber = 0;
-    std::string fileName = basePath + "0-" + std::to_string(fileNumber) + ".annconf";
+    std::string fileName = basePath + std::to_string(fileNumber) + ".annconf";
     while (FileExists(fileName)) {
         fileNumber++;
-        fileName = basePath + "0-" + std::to_string(fileNumber) + ".annconf";
+        fileName = basePath + std::to_string(fileNumber) + ".annconf";
     }
     std::ofstream OutFile;
     OutFile.open(fileName);

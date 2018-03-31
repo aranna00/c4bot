@@ -20,14 +20,15 @@ class Network {
     std::vector<OutputNeuron *> outputs;
     std::vector<std::vector<Neuron *>> layers;
 
-    void generateFileFromNetwork();
-
 public:
     static std::string MakeRandomNetwork();
+
+    static void generateFileFromNetwork(Network network);
 
     void setInputValues(State &board);
     void generateNetworkFromFile(std::string filePath);
 
+    char *orgFilename;
     int getBestValue();
 };
 

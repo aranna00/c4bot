@@ -10,11 +10,10 @@
 #endif
 
 double Neuron::getValue() {
-    if (value == 0) {
-        double tempVal = 0;
-        for (Synapse *synIn : inBound) {
-            tempVal += synIn->weight * synIn->start->getValue();
-        }
+    double tempVal = 0;
+    for (Synapse *synIn : inBound) {
+        tempVal += synIn->weight * synIn->start->getValue();
+    }
 
 //        value = atan(M_PI*tempVal/2)*2/M_PI;
 //        value = atan(tempVal);
@@ -22,9 +21,7 @@ double Neuron::getValue() {
 //        value = 1/sqrt(1+pow(tempVal,2));
 //        value = erf(sqrt(M_PI)*tempVal/2);
 //        value = tanh(tempVal);
-        value = tempVal / (1 + abs(tempVal));
-        std::cerr << value << std::endl;
-    }
+    value = tempVal / (1 + abs(tempVal));
 
     return value;
 }
