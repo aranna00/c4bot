@@ -126,16 +126,25 @@ void Network::setInputValues(State &board) {
     for (int y = 5; y >= 0; --y) {
         for (int x = 0; x < 7; ++x) {
             if (board[y][x] == Player::None) {
-                inputs[neuronCounter]->value = 1;
+                inputs[neuronCounter]->value = 0;
             }
-            neuronCounter++;
             if (board[y][x] == player) {
                 inputs[neuronCounter]->value = 1;
             }
-            neuronCounter++;
             if (board[y][x] == C4Bot::otherPlayer(player)) {
-                inputs[neuronCounter]->value = 1;
+                inputs[neuronCounter]->value = -1;
             }
+//            if (board[y][x] == Player::None) {
+//                inputs[neuronCounter]->value = 1;
+//            }
+//            neuronCounter++;
+//            if (board[y][x] == player) {
+//                inputs[neuronCounter]->value = 1;
+//            }
+//            neuronCounter++;
+//            if (board[y][x] == C4Bot::otherPlayer(player)) {
+//                inputs[neuronCounter]->value = 1;
+//            }
             neuronCounter++;
         }
     }
@@ -163,8 +172,8 @@ std::string Network::MakeRandomNetwork() {
     }
     std::ofstream OutFile;
     OutFile.open(fileName);
-    int inputValues = 126;
-    int hiddenLayers = 1;
+    int inputValues = 42;
+    int hiddenLayers = 3;
     int nodesInLayer = 5;
     int outputValues = 7;
 
